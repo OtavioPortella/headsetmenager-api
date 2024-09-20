@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Perfil {
+  id     Int    @id @default(autoincrement())
+  perfil String
+  User   User[]
+}
+
+model Pedido {
+  id         Int    @id @default(autoincrement())
+  codTicket  String
+  idUsuario  User   @relation(fields: [userId], references: [id])
+  userId     Int
+  qtdSimples Int
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  matricula String
+  perfil    Perfil   @relation(fields: [idPerfil], references: [id])
+  idPerfil  Int
+  Pedido    Pedido[]
+}
+
+model Carteira {
+  id       Int     @id @default(autoincrement())
+  codigo   Int
+  nome     String
+  Filial   Filial? @relation(fields: [idFilial], references: [id])
+  idFilial Int?
+}
+
+model Filial {
+  id         Int        @id @default(autoincrement())
+  nome       String
+  carteiras  Carteira[]
+  Estoque    Estoque[]
+  endereco   Endereco   @relation(fields: [idEndereco], references: [id])
+  idEndereco Int
+  maloteOrigem     Malote[] @relation("filial_origem_malote")
+  maloteDestino     Malote[] @relation("filial_destino_malote")
+}
+
+model Estoque {
+  id         Int    @id @default(autoincrement())
+  qtdSimples Int
+  qtdDuplo   Int
+  filial     Filial @relation(fields: [idFilial], references: [id])
+  idFilial   Int
+}
+
+model Endereco {
+  id     Int      @id @default(autoincrement())
+  rua    String
+  numero String
+  cep    String
+  bairro String
+  cidade String
+  estado String
+  Filial Filial[]
+}
+
+model Malote {
+  id              Int     @id @default(autoincrement())
+  qtdSimples      Int
+  qtdDuplo        Int
+  garantia        Boolean
+  filialOrigem    Filial  @relation(fields: [filialOrigemId], references: [id], name: "filial_origem_malote")
+  filialDestino   Filial  @relation(fields: [filialDestinoId], references: [id], name: "filial_destino_malote")
+  filialOrigemId  Int
+  filialDestinoId Int
+}
