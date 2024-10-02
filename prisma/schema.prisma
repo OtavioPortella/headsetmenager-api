@@ -8,9 +8,11 @@ datasource db {
 }
 
 model Perfil {
-  id     Int    @id @default(autoincrement())
-  perfil String
-  User   User[]
+  id               Int     @id @default(autoincrement())
+  nome             String
+  user             User[]
+  podeCriarUsuario Boolean @default(false)
+  admin            Boolean
 }
 
 model Pedido {
@@ -22,31 +24,34 @@ model Pedido {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  matricula String
-  perfil    Perfil   @relation(fields: [idPerfil], references: [id])
-  idPerfil  Int
-  Pedido    Pedido[]
+  id         Int       @id @default(autoincrement())
+  nome       String
+  matricula  String    @unique
+  perfil     Perfil    @relation(fields: [idPerfil], references: [id])
+  idPerfil   Int
+  pedido     Pedido[]
+  carteira   Carteira? @relation(fields: [idCarteira], references: [id])
+  idCarteira Int?
+  senha      String
 }
 
 model Carteira {
   id       Int     @id @default(autoincrement())
-  codigo   Int
   nome     String
-  Filial   Filial? @relation(fields: [idFilial], references: [id])
+  filial   Filial? @relation(fields: [idFilial], references: [id])
   idFilial Int?
+  usuarios User[]
 }
 
 model Filial {
-  id         Int        @id @default(autoincrement())
-  nome       String
-  carteiras  Carteira[]
-  Estoque    Estoque[]
-  endereco   Endereco   @relation(fields: [idEndereco], references: [id])
-  idEndereco Int
-  maloteOrigem     Malote[] @relation("filial_origem_malote")
-  maloteDestino     Malote[] @relation("filial_destino_malote")
+  id            Int        @id @default(autoincrement())
+  nome          String
+  carteiras     Carteira[]
+  estoque       Estoque[]
+  endereco      Endereco   @relation(fields: [idEndereco], references: [id])
+  idEndereco    Int
+  maloteOrigem  Malote[]   @relation("filial_origem_malote")
+  maloteDestino Malote[]   @relation("filial_destino_malote")
 }
 
 model Estoque {
@@ -65,7 +70,7 @@ model Endereco {
   bairro String
   cidade String
   estado String
-  Filial Filial[]
+  filial Filial[]
 }
 
 model Malote {
