@@ -13,7 +13,10 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error",
-        "noUnusedImports": "error"
+        "noUnusedImports": {
+          "fix": "none",
+          "level": "warn"
+        }
       },
       "nursery": {
         "useSortedClasses": {
