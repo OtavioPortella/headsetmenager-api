@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import cors from 'cors';
 
 import * as UserController from './controllers/user-controller';
 import * as PedidoController from './controllers/pedido-controller';
@@ -10,6 +11,8 @@ import * as MaloteController from './controllers/malote-controller';
 import { LoginMiddleware } from './middlewares/login-middleware';
 
 export const routes = Router();
+
+routes.use(cors());
 
 routes.post('/login', LoginController.create);
 
