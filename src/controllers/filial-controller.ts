@@ -26,3 +26,9 @@ export async function create(req: Request, res: Response) {
     filial: criado,
   });
 }
+
+export async function index(_: Request, res: Response) {
+  const filiais = await db.filial.findMany();
+
+  return res.json(filiais);
+}
