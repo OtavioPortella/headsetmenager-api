@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import * as UserController from './controllers/user-controller';
+import * as PedidoController from './controllers/pedido-controller';
 import * as PerfilController from './controllers/perfil-controller';
 import * as FilialController from './controllers/filial-controller';
 import * as CarteiraController from './controllers/carteira-controller';
@@ -24,3 +25,6 @@ routes.post('/user', UserController.create);
 routes.post('/perfil', PerfilController.create);
 
 routes.post('/malote', MaloteController.create);
+
+routes.post('/pedido', PedidoController.create);
+routes.get('/pedido', PedidoController.index);

@@ -19,9 +19,13 @@ export function LoginMiddleware(
 
     const token = auth.split(' ')[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      userId: number;
+    };
 
     console.log('decoded', decoded);
+
+    req.userId = decoded.userId;
 
     next();
   } catch {
