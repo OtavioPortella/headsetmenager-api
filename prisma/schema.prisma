@@ -75,14 +75,21 @@ model Endereco {
   filial Filial[]
 }
 
+enum MaloteStatus {
+  ENVIADO
+  RECEBIDO
+}
+
 model Malote {
-  id              Int      @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   qtdSimples      Int
   qtdDuplo        Int
   garantia        Boolean
-  filialOrigem    Filial   @relation(fields: [filialOrigemId], references: [id], name: "filial_origem_malote")
-  filialDestino   Filial   @relation(fields: [filialDestinoId], references: [id], name: "filial_destino_malote")
+  filialOrigem    Filial       @relation(fields: [filialOrigemId], references: [id], name: "filial_origem_malote")
+  filialDestino   Filial       @relation(fields: [filialDestinoId], references: [id], name: "filial_destino_malote")
   filialOrigemId  Int
   filialDestinoId Int
-  createdAt       DateTime @default(now())
+  status          MaloteStatus
+
+  createdAt DateTime @default(now())
 }
