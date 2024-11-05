@@ -22,6 +22,8 @@ routes.post('/filial', FilialController.create);
 routes.get('/filial', FilialController.index);
 
 routes.post('/carteira', CarteiraController.create);
+routes.get('/carteira', CarteiraController.index);
+routes.delete('/carteira/:id', CarteiraController.destroy);
 
 routes.post('/user', UserController.create);
 

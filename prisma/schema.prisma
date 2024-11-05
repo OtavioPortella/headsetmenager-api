@@ -38,7 +38,7 @@ model User {
   perfil     Perfil    @relation(fields: [idPerfil], references: [id])
   idPerfil   Int
   pedido     Pedido[]
-  carteira   Carteira? @relation(fields: [idCarteira], references: [id])
+  carteira   Carteira? @relation(fields: [idCarteira], references: [id], onDelete: SetNull)
   idCarteira Int?
   senha      String
 }
@@ -72,11 +72,6 @@ model Endereco {
   cidade String
   estado String
   filial Filial[]
-}
-
-enum MaloteStatus {
-  ENVIADO
-  RECEBIDO
 }
 
 model Malote {

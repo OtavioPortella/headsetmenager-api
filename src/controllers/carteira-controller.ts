@@ -15,3 +15,24 @@ export async function create(req: Request, res: Response) {
     carteira: criado,
   });
 }
+
+export async function index(req: Request, res: Response) {
+  const { idFilial } = req.query;
+
+  const carteiras = await db.carteira.findMany({
+    include: {
+      filial: true,
+    },
+    where: idFilial ? { idFilial: Number(idFilial) } : undefined,
+  });
+
+  return res.json(carteiras);
+}
+
+export async function destroy(req: Request, res: Response) {
+  const { id } = req.params;
+
+  await db.carteira.delete({ where: { id: Number(id) } });
+
+  return res.status(204).json();
+}
