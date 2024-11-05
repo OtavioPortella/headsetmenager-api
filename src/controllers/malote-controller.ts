@@ -49,6 +49,26 @@ export async function update(req: Request, res: Response) {
   });
 }
 
+export async function destroy(req: Request, res: Response) {
+  const { id } = req.params;
+
+  const malote = await db.malote.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!malote) {
+    return res.status(404).json({ error: 'Malote não encontrado' });
+  }
+
+  await db.malote.delete({
+    where: { id: Number(id) },
+  });
+
+  return res.status(201).json({
+    message: 'Malote deletado com sucesso',
+  });
+}
+
 export async function list(_: Request, res: Response) {
   const malotes = await db.malote.findMany();
 
