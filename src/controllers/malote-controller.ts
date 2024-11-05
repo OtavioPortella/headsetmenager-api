@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import { db } from '../database';
-import { MaloteStatus } from '@prisma/client';
 
 export async function create(req: Request, res: Response) {
   const { qtdSimples, qtdDuplo, garantia, filialOrigemId, filialDestinoId } =
@@ -13,12 +12,40 @@ export async function create(req: Request, res: Response) {
       qtdSimples: Number(qtdSimples),
       filialDestinoId,
       filialOrigemId,
-      status: MaloteStatus.ENVIADO,
     },
   });
 
   return res.status(201).json({
     malote: criado,
+  });
+}
+
+export async function update(req: Request, res: Response) {
+  const { id } = req.params;
+  const { qtdSimples, qtdDuplo, garantia, filialOrigemId, filialDestinoId } =
+    req.body;
+
+  const malote = await db.malote.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!malote) {
+    return res.status(404).json({ error: 'Malote não encontrado' });
+  }
+
+  const atualizado = await db.malote.update({
+    where: { id: Number(id) },
+    data: {
+      garantia,
+      qtdDuplo: Number(qtdDuplo),
+      qtdSimples: Number(qtdSimples),
+      filialDestinoId,
+      filialOrigemId,
+    },
+  });
+
+  return res.status(201).json({
+    malote: atualizado,
   });
 }
 

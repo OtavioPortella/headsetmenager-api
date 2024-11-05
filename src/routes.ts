@@ -29,6 +29,7 @@ routes.post('/perfil', PerfilController.create);
 
 routes.post('/malote', MaloteController.create);
 routes.get('/malote', MaloteController.list);
+routes.put('/malote/:id', MaloteController.update);
 
 routes.post('/pedido', PedidoController.create);
 routes.get('/pedido', PedidoController.index);
