@@ -28,6 +28,7 @@ routes.post('/user', UserController.create);
 routes.post('/perfil', PerfilController.create);
 
 routes.post('/malote', MaloteController.create);
+routes.get('/malote', MaloteController.list);
 
 routes.post('/pedido', PedidoController.create);
 routes.get('/pedido', PedidoController.index);

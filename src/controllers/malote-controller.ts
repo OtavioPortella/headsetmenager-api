@@ -9,8 +9,8 @@ export async function create(req: Request, res: Response) {
   const criado = await db.malote.create({
     data: {
       garantia,
-      qtdDuplo,
-      qtdSimples,
+      qtdDuplo: Number(qtdDuplo),
+      qtdSimples: Number(qtdSimples),
       filialDestinoId,
       filialOrigemId,
       status: MaloteStatus.ENVIADO,
@@ -20,4 +20,10 @@ export async function create(req: Request, res: Response) {
   return res.status(201).json({
     malote: criado,
   });
+}
+
+export async function list(_: Request, res: Response) {
+  const malotes = await db.malote.findMany();
+
+  return res.json(malotes);
 }

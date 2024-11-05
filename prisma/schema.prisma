@@ -15,12 +15,18 @@ model Perfil {
   admin            Boolean
 }
 
+enum MotivoPedido {
+  NOVATO
+  TROCA
+}
+
 model Pedido {
-  id         Int      @id @default(autoincrement())
-  usuario    User     @relation(fields: [idUsuario], references: [id])
+  id         Int          @id @default(autoincrement())
+  usuario    User         @relation(fields: [idUsuario], references: [id])
   idUsuario  Int
   qtdSimples Int
   matriculas String[]
+  motivo     MotivoPedido
 
   createdAt DateTime @default(now())
 }
@@ -46,22 +52,15 @@ model Carteira {
 }
 
 model Filial {
-  id            Int        @id @default(autoincrement())
-  nome          String
-  carteiras     Carteira[]
-  estoque       Estoque[]
-  endereco      Endereco   @relation(fields: [idEndereco], references: [id])
-  idEndereco    Int
-  maloteOrigem  Malote[]   @relation("filial_origem_malote")
-  maloteDestino Malote[]   @relation("filial_destino_malote")
-}
-
-model Estoque {
-  id         Int    @id @default(autoincrement())
-  qtdSimples Int
-  qtdDuplo   Int
-  filial     Filial @relation(fields: [idFilial], references: [id])
-  idFilial   Int
+  id             Int        @id @default(autoincrement())
+  nome           String
+  carteiras      Carteira[]
+  estoqueSimples Int        @default(0)
+  estoqueDuplo   Int        @default(0)
+  endereco       Endereco   @relation(fields: [idEndereco], references: [id])
+  idEndereco     Int
+  maloteOrigem   Malote[]   @relation("filial_origem_malote")
+  maloteDestino  Malote[]   @relation("filial_destino_malote")
 }
 
 model Endereco {
@@ -81,15 +80,15 @@ enum MaloteStatus {
 }
 
 model Malote {
-  id              Int          @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   qtdSimples      Int
   qtdDuplo        Int
   garantia        Boolean
-  filialOrigem    Filial       @relation(fields: [filialOrigemId], references: [id], name: "filial_origem_malote")
-  filialDestino   Filial       @relation(fields: [filialDestinoId], references: [id], name: "filial_destino_malote")
+  filialOrigem    Filial    @relation(fields: [filialOrigemId], references: [id], name: "filial_origem_malote")
+  filialDestino   Filial    @relation(fields: [filialDestinoId], references: [id], name: "filial_destino_malote")
   filialOrigemId  Int
   filialDestinoId Int
-  status          MaloteStatus
+  recebidoEm      DateTime?
 
   createdAt DateTime @default(now())
 }
