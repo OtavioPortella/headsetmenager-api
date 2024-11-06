@@ -16,3 +16,11 @@ export async function create(req: Request, res: Response) {
     perfil: criado,
   });
 }
+
+export async function index(_: Request, res: Response) {
+  const perfis = await db.perfil.findMany();
+
+  return res.status(200).json({
+    perfis,
+  });
+}

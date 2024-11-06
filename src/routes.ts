@@ -26,8 +26,12 @@ routes.get('/carteira', CarteiraController.index);
 routes.delete('/carteira/:id', CarteiraController.destroy);
 
 routes.post('/user', UserController.create);
+routes.get('/user', UserController.index);
+routes.get('/user/me', UserController.show);
+routes.delete('/user/:id', UserController.destroy);
 
 routes.post('/perfil', PerfilController.create);
+routes.get('/perfil', PerfilController.index);
 
 routes.post('/malote', MaloteController.create);
 routes.get('/malote', MaloteController.list);

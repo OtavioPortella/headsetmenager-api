@@ -70,6 +70,13 @@ async function main() {
 
   const carteira = await db.carteira.create({
     data: {
+      nome: 'Suporte',
+      idFilial: filial.id,
+    },
+  });
+
+  await db.carteira.create({
+    data: {
       nome: 'BV ADM',
       idFilial: filial.id,
     },
