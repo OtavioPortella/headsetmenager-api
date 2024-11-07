@@ -20,6 +20,8 @@ routes.use(LoginMiddleware);
 
 routes.post('/filial', FilialController.create);
 routes.get('/filial', FilialController.index);
+routes.put('/filial/:id', FilialController.update);
+routes.delete('/filial/:id', FilialController.destroy);
 
 routes.post('/carteira', CarteiraController.create);
 routes.get('/carteira', CarteiraController.index);
