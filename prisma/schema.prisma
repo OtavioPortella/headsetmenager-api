@@ -17,7 +17,19 @@ model Perfil {
 
 enum MotivoPedido {
   NOVATO
-  TROCA
+  MAL_CONTATO
+  MICROFONE_MUDO
+  ALTO_FALANTE_MUDO
+  ARCO_QUEBRADO
+  RUIDO
+  OUTROS
+}
+
+enum StatusPedido {
+  NOVO
+  PENDENTE
+  EM_ATENDIMENTO
+  FINALIZADO
 }
 
 model Pedido {
@@ -27,6 +39,7 @@ model Pedido {
   qtdSimples Int
   matriculas String[]
   motivo     MotivoPedido
+  status     StatusPedido @default(NOVO)
 
   createdAt DateTime @default(now())
 }
