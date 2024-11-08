@@ -42,3 +42,4 @@ routes.delete('/malote/:id', MaloteController.destroy);
 
 routes.post('/pedido', PedidoController.create);
 routes.get('/pedido', PedidoController.index);
+routes.delete('/pedido/:id', PedidoController.destroy);
