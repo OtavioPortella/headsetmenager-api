@@ -45,7 +45,14 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function index(_: Request, res: Response) {
-  const pedidos = await db.pedido.findMany();
+  const pedidos = await db.pedido.findMany({
+    where: {
+      deletedAt: null,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 
   return res.json(pedidos);
 }
@@ -53,7 +60,81 @@ export async function index(_: Request, res: Response) {
 export async function destroy(req: Request, res: Response) {
   const { id } = req.params;
 
-  await db.pedido.delete({ where: { id: Number(id) } });
+  await db.pedido.update({
+    where: { id: Number(id) },
+    data: { deletedAt: new Date() },
+  });
+
+  return res.status(204).json();
+}
+
+export async function update(req: Request, res: Response) {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const pedido = await db.pedido.findUnique({
+    where: {
+      deletedAt: null,
+      id: Number(id),
+    },
+    include: {
+      usuario: {
+        include: {
+          carteira: {
+            include: {
+              filial: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!pedido) {
+    return res.status(400).json({
+      error: 'Pedido não encontrado',
+    });
+  }
+
+  const filial = await db.filial.findUnique({
+    where: {
+      id: pedido.usuario.carteira?.filial?.id ?? -1,
+    },
+  });
+
+  if (!filial) {
+    return res.status(400).json({
+      error: 'Filial não encontrado',
+    });
+  }
+
+  if ([StatusPedido.EM_ATENDIMENTO, StatusPedido.FINALIZADO].includes(status)) {
+    if (filial.estoqueSimples < pedido.qtdSimples) {
+      return res.status(400).json({
+        error: 'Não há estoque suficiente para este pedido',
+      });
+    }
+  }
+
+  await db.pedido.update({
+    where: { id: pedido.id },
+    data: {
+      status,
+    },
+  });
+
+  if (status === StatusPedido.FINALIZADO) {
+    await db.filial.update({
+      where: {
+        id: filial.id,
+      },
+      data: {
+        estoqueSimples: {
+          decrement: 1,
+        },
+      },
+    });
+  }
 
   return res.status(204).json();
 }
