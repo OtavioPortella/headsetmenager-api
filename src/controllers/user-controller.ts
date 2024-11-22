@@ -60,6 +60,15 @@ export async function show(req: Request, res: Response) {
 export async function index(req: Request, res: Response) {
   const { idFilial } = req.query;
 
+  const user = await db.user.findUniqueOrThrow({
+    where: {
+      id: req.userId,
+    },
+    include: {
+      perfil: true,
+    },
+  });
+
   const users = await db.user.findMany({
     select: {
       id: true,
@@ -86,13 +95,12 @@ export async function index(req: Request, res: Response) {
         },
       },
     },
-    where: idFilial
-      ? {
-          carteira: {
-            idFilial: Number(idFilial),
-          },
-        }
-      : undefined,
+    where: {
+      carteira: {
+        id: !user.perfil.admin ? (user.idCarteira ?? undefined) : undefined,
+        idFilial: idFilial ? Number(idFilial) : undefined,
+      },
+    },
   });
 
   return res.status(200).json({
