@@ -55,6 +55,8 @@ model User {
   carteira   Carteira? @relation(fields: [idCarteira], references: [id], onDelete: SetNull)
   idCarteira Int?
   senha      String
+
+  deletedAt DateTime?
 }
 
 model Carteira {

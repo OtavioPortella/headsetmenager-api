@@ -23,8 +23,6 @@ export function LoginMiddleware(
       userId: number;
     };
 
-    console.log('decoded', decoded);
-
     req.userId = decoded.userId;
 
     next();

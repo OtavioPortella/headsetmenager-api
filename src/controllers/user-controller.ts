@@ -24,7 +24,7 @@ export async function create(req: Request, res: Response) {
 
 export async function show(req: Request, res: Response) {
   const user = await db.user.findUnique({
-    where: { id: Number(req.userId) },
+    where: { id: Number(req.userId), deletedAt: null },
     select: {
       id: true,
       nome: true,
@@ -63,6 +63,7 @@ export async function index(req: Request, res: Response) {
   const user = await db.user.findUniqueOrThrow({
     where: {
       id: req.userId,
+      deletedAt: null,
     },
     include: {
       perfil: true,
@@ -96,6 +97,7 @@ export async function index(req: Request, res: Response) {
       },
     },
     where: {
+      deletedAt: null,
       carteira: {
         id: !user.perfil.admin ? (user.idCarteira ?? undefined) : undefined,
         idFilial: idFilial ? Number(idFilial) : undefined,
@@ -111,7 +113,14 @@ export async function index(req: Request, res: Response) {
 export async function destroy(req: Request, res: Response) {
   const { id } = req.params;
 
-  await db.user.delete({ where: { id: Number(id) } });
+  await db.user.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      deletedAt: new Date(),
+    },
+  });
 
   return res.status(204).json();
 }
