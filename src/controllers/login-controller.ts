@@ -14,7 +14,7 @@ export async function create(req: Request, res: Response) {
 
   if (!user) {
     return res.status(401).json({
-      erro: 'Usuário ou senha incorretos',
+      error: 'Usuário ou senha incorretos',
     });
   }
 
@@ -22,7 +22,7 @@ export async function create(req: Request, res: Response) {
 
   if (!isValidPass) {
     return res.status(401).json({
-      erro: 'Usuário ou senha incorretos',
+      error: 'Usuário ou senha incorretos',
     });
   }
 
