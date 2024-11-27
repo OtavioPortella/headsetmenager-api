@@ -10,6 +10,9 @@ export async function create(req: Request, res: Response) {
     where: {
       matricula,
     },
+    include: {
+      perfil: true,
+    },
   });
 
   if (!user) {

@@ -44,10 +44,20 @@ export async function create(req: Request, res: Response) {
   });
 }
 
-export async function index(_: Request, res: Response) {
+export async function index(req: Request, res: Response) {
+  const user = await db.user.findUnique({
+    where: {
+      id: Number(req.userId),
+    },
+    include: {
+      perfil: true,
+    },
+  });
+
   const pedidos = await db.pedido.findMany({
     where: {
       deletedAt: null,
+      idUsuario: !user?.perfil.admin ? user?.id : undefined,
     },
     orderBy: {
       createdAt: 'desc',

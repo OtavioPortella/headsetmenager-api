@@ -8,6 +8,7 @@ import * as FilialController from './controllers/filial-controller';
 import * as CarteiraController from './controllers/carteira-controller';
 import * as LoginController from './controllers/login-controller';
 import * as MaloteController from './controllers/malote-controller';
+import * as DashboardController from './controllers/dashboard-controller';
 import { LoginMiddleware } from './middlewares/login-middleware';
 
 export const routes = Router();
@@ -44,3 +45,5 @@ routes.post('/pedido', PedidoController.create);
 routes.get('/pedido', PedidoController.index);
 routes.delete('/pedido/:id', PedidoController.destroy);
 routes.put('/pedido/:id', PedidoController.update);
+
+routes.get('/dashboard', DashboardController.index);
