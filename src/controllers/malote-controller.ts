@@ -69,8 +69,43 @@ export async function destroy(req: Request, res: Response) {
   });
 }
 
-export async function list(_: Request, res: Response) {
-  const malotes = await db.malote.findMany();
+export async function list(req: Request, res: Response) {
+  const user = await db.user.findUnique({
+    where: {
+      id: req.userId,
+    },
+    include: {
+      carteira: true,
+    },
+  });
 
-  return res.json(malotes);
+  const sended = await db.malote.findMany({
+    where: {
+      filialOrigemId: user?.carteira?.idFilial ?? -1,
+    },
+  });
+
+  const received = await db.malote.findMany({
+    where: {
+      filialDestinoId: user?.carteira?.idFilial ?? -1,
+    },
+  });
+
+  return res.json({
+    sended,
+    received,
+  });
+}
+
+export async function receive(req: Request, res: Response) {
+  await db.malote.update({
+    where: {
+      id: Number(req.params.id),
+    },
+    data: {
+      recebidoEm: new Date(),
+    },
+  });
+
+  return res.status(204).json({});
 }

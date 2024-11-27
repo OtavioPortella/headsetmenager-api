@@ -40,6 +40,7 @@ routes.post('/malote', MaloteController.create);
 routes.get('/malote', MaloteController.list);
 routes.put('/malote/:id', MaloteController.update);
 routes.delete('/malote/:id', MaloteController.destroy);
+routes.put('/malote/receive/:id', MaloteController.receive);
 
 routes.post('/pedido', PedidoController.create);
 routes.get('/pedido', PedidoController.index);
