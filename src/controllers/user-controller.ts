@@ -46,6 +46,8 @@ export async function show(req: Request, res: Response) {
           id: true,
           nome: true,
           podeCriarUsuario: true,
+          podeGerenciarMalotes: true,
+          podeGerenciarPedidos: true,
           admin: true,
         },
       },

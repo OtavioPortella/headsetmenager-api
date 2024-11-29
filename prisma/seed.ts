@@ -6,10 +6,10 @@ const db = new PrismaClient();
 async function main() {
   const endereco = await db.endereco.create({
     data: {
-      rua: 'Aviação',
+      rua: 'Rua teste',
       numero: '365',
-      bairro: 'Santana',
-      cep: '16025-020',
+      bairro: 'Centro',
+      cep: '16025-000',
       cidade: 'Araçatuba',
       estado: 'São Paulo',
     },
@@ -17,29 +17,7 @@ async function main() {
 
   const filial = await db.filial.create({
     data: {
-      nome: 'Aval Aviação',
-      carteiras: {
-        create: [
-          {
-            nome: 'Cartão amigável',
-          },
-          {
-            nome: 'Cartão liquidado',
-          },
-          {
-            nome: 'BV Solar',
-          },
-          {
-            nome: 'Crédito pessoal WO',
-          },
-          {
-            nome: 'Mercado Pago',
-          },
-          {
-            nome: 'Banco Pan',
-          },
-        ],
-      },
+      nome: 'Matriz',
       idEndereco: endereco.id,
     },
   });
@@ -49,6 +27,8 @@ async function main() {
       nome: 'Suporte',
       admin: true,
       podeCriarUsuario: true,
+      podeGerenciarMalotes: true,
+      podeGerenciarPedidos: true,
     },
   });
 
@@ -57,6 +37,7 @@ async function main() {
       nome: 'Supervisor',
       admin: false,
       podeCriarUsuario: true,
+      podeGerenciarPedidos: true,
     },
   });
 
@@ -65,6 +46,17 @@ async function main() {
       nome: 'Coordenador',
       admin: false,
       podeCriarUsuario: false,
+      podeGerenciarPedidos: true,
+    },
+  });
+
+  await db.perfil.create({
+    data: {
+      nome: 'Manutenção',
+      admin: false,
+      podeCriarUsuario: false,
+      podeGerenciarMalotes: true,
+      podeGerenciarPedidos: false,
     },
   });
 
@@ -75,19 +67,12 @@ async function main() {
     },
   });
 
-  await db.carteira.create({
-    data: {
-      nome: 'BV ADM',
-      idFilial: filial.id,
-    },
-  });
-
   await db.user.create({
     data: {
-      nome: 'Otávio',
+      nome: 'Admiro',
       idPerfil: suporte.id,
-      matricula: 't29682',
-      senha: await bcrypt.hash('1234', 8),
+      matricula: 'admin',
+      senha: await bcrypt.hash('admin', 8),
       idCarteira: carteira.id,
     },
   });
