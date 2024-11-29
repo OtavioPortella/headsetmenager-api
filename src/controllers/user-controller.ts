@@ -96,6 +96,7 @@ export async function index(req: Request, res: Response) {
         },
       },
     },
+    orderBy: { nome: 'asc' },
     where: {
       deletedAt: null,
       carteira: {

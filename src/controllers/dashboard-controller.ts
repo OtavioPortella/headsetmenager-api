@@ -19,6 +19,9 @@ export async function index(_: Request, res: Response) {
         },
       },
     },
+    orderBy: {
+      nome: 'asc',
+    },
   });
 
   const dashboard = filials.map((filial) => {
@@ -30,6 +33,10 @@ export async function index(_: Request, res: Response) {
       (order) => order.status === StatusPedido.PENDENTE,
     );
 
+    const newOrders = allOrders.filter(
+      (order) => order.status === StatusPedido.NOVO,
+    );
+
     return {
       id: filial.id,
       nome: filial.nome,
@@ -37,6 +44,7 @@ export async function index(_: Request, res: Response) {
       estoqueDuplo: filial.estoqueDuplo,
       pedidosPendentes: pendingOrders.length,
       totalPedidos: allOrders.length,
+      novosPedidos: newOrders.length,
     };
   });
 

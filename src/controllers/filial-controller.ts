@@ -34,6 +34,7 @@ export async function index(_: Request, res: Response) {
     include: {
       endereco: true,
     },
+    orderBy: { nome: 'asc' },
   });
 
   return res.json(filiais);

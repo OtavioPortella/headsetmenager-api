@@ -2,8 +2,24 @@ import type { Request, Response } from 'express';
 import { db } from '../database';
 
 export async function create(req: Request, res: Response) {
-  const { qtdSimples, qtdDuplo, garantia, filialOrigemId, filialDestinoId } =
-    req.body;
+  const { qtdSimples, qtdDuplo, garantia, filialDestinoId } = req.body;
+
+  const user = await db.user.findUnique({
+    where: {
+      id: req.userId,
+    },
+    include: {
+      carteira: {
+        include: {
+          filial: true,
+        },
+      },
+    },
+  });
+
+  if (!user?.carteira?.idFilial) {
+    throw new Error('Usuário não vinculado a nenhuma filial ou carteira');
+  }
 
   const criado = await db.malote.create({
     data: {
@@ -11,7 +27,7 @@ export async function create(req: Request, res: Response) {
       qtdDuplo: Number(qtdDuplo),
       qtdSimples: Number(qtdSimples),
       filialDestinoId,
-      filialOrigemId,
+      filialOrigemId: user.carteira.idFilial,
     },
   });
 
@@ -83,11 +99,33 @@ export async function list(req: Request, res: Response) {
     where: {
       filialOrigemId: user?.carteira?.idFilial ?? -1,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      filialDestino: {
+        select: {
+          id: true,
+          nome: true,
+        },
+      },
+    },
   });
 
   const received = await db.malote.findMany({
     where: {
       filialDestinoId: user?.carteira?.idFilial ?? -1,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      filialDestino: {
+        select: {
+          id: true,
+          nome: true,
+        },
+      },
     },
   });
 

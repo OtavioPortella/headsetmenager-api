@@ -24,6 +24,7 @@ export async function index(req: Request, res: Response) {
       filial: true,
     },
     where: idFilial ? { idFilial: Number(idFilial) } : undefined,
+    orderBy: { nome: 'asc' },
   });
 
   return res.json(carteiras);

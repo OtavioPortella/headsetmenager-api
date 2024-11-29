@@ -18,7 +18,9 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function index(_: Request, res: Response) {
-  const perfis = await db.perfil.findMany();
+  const perfis = await db.perfil.findMany({
+    orderBy: { nome: 'asc' },
+  });
 
   return res.status(200).json({
     perfis,
