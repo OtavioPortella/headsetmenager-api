@@ -5,6 +5,21 @@ import { db } from '../database';
 export async function create(req: Request, res: Response) {
   const { nome, idPerfil, matricula, idCarteira, senha } = req.body;
 
+  const user = await db.user.findUniqueOrThrow({
+    where: {
+      id: req.userId,
+    },
+    include: {
+      perfil: true,
+    },
+  });
+
+  if (!user.perfil.permitidoCriarUsuariosDosPerfis.includes(idPerfil)) {
+    return res.status(403).json({
+      error: 'Operação nÀo permitida',
+    });
+  }
+
   const passwordHash = await bcrypt.hash(senha, 10);
 
   const criado = await db.user.create({

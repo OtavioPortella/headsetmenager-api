@@ -8,13 +8,14 @@ datasource db {
 }
 
 model Perfil {
-  id                   Int     @id @default(autoincrement())
-  nome                 String
-  user                 User[]
-  podeCriarUsuario     Boolean @default(false)
-  podeGerenciarMalotes Boolean @default(false)
-  podeGerenciarPedidos Boolean @default(false)
-  admin                Boolean
+  id                              Int     @id @default(autoincrement())
+  nome                            String
+  user                            User[]
+  podeCriarUsuario                Boolean @default(false)
+  podeGerenciarMalotes            Boolean @default(false)
+  podeGerenciarPedidos            Boolean @default(false)
+  admin                           Boolean
+  permitidoCriarUsuariosDosPerfis Int[]
 }
 
 enum MotivoPedido {

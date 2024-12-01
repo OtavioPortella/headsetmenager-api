@@ -24,25 +24,31 @@ async function main() {
 
   const suporte = await db.perfil.create({
     data: {
+      id: 1,
       nome: 'Suporte',
       admin: true,
       podeCriarUsuario: true,
       podeGerenciarMalotes: true,
       podeGerenciarPedidos: true,
+      permitidoCriarUsuariosDosPerfis: [2, 3, 4],
     },
   });
 
   await db.perfil.create({
     data: {
+      id: 2,
       nome: 'Supervisor',
       admin: false,
       podeCriarUsuario: true,
       podeGerenciarPedidos: true,
+      podeGerenciarMalotes: false,
+      permitidoCriarUsuariosDosPerfis: [3],
     },
   });
 
   await db.perfil.create({
     data: {
+      id: 3,
       nome: 'Coordenador',
       admin: false,
       podeCriarUsuario: false,
@@ -52,6 +58,7 @@ async function main() {
 
   await db.perfil.create({
     data: {
+      id: 4,
       nome: 'Manutenção',
       admin: false,
       podeCriarUsuario: false,
