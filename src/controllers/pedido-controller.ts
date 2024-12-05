@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { db } from '../database';
 import { StatusPedido } from '@prisma/client';
+import { validateOrdersByBranch } from '../utils/validate-orders';
 
 export async function create(req: Request, res: Response) {
   const { qtdSimples, matriculas, motivo } = req.body;
@@ -140,10 +141,11 @@ export async function update(req: Request, res: Response) {
       },
       data: {
         estoqueSimples: {
-          decrement: 1,
+          decrement: pedido.qtdSimples,
         },
       },
     });
+    await validateOrdersByBranch(filial.id);
   }
 
   return res.status(204).json();

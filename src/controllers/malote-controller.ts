@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { db } from '../database';
+import { validateOrdersByBranch } from '../utils/validate-orders';
 
 export async function create(req: Request, res: Response) {
   const { qtdSimples, qtdDuplo, garantia, filialDestinoId } = req.body;
@@ -136,6 +137,56 @@ export async function list(req: Request, res: Response) {
 }
 
 export async function receive(req: Request, res: Response) {
+  // origem = x
+  // destino = manut
+  const malote = await db.malote.findUniqueOrThrow({
+    where: {
+      id: Number(req.params.id),
+    },
+  });
+
+  const filialManutencao = await db.filial.findFirst({
+    where: {
+      nome: 'Manutenção',
+    },
+  });
+
+  if (malote.filialDestinoId !== filialManutencao?.id) {
+    const filialOrigem = await db.filial.update({
+      where: {
+        id: malote.filialOrigemId,
+      },
+      data: {
+        estoqueDuplo: {
+          decrement: malote.qtdDuplo,
+        },
+        estoqueSimples: {
+          decrement: malote.qtdSimples,
+        },
+      },
+    });
+
+    // Valida pedidos da filial origem após alteração do estoque
+    await validateOrdersByBranch(filialOrigem.id);
+  }
+
+  const filialDestino = await db.filial.update({
+    where: {
+      id: malote.filialDestinoId,
+    },
+    data: {
+      estoqueDuplo: {
+        increment: malote.qtdDuplo,
+      },
+      estoqueSimples: {
+        increment: malote.qtdSimples,
+      },
+    },
+  });
+
+  // Valida pedidos da filial destino após alteração do estoque
+  await validateOrdersByBranch(filialDestino.id);
+
   await db.malote.update({
     where: {
       id: Number(req.params.id),
