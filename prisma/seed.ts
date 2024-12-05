@@ -64,7 +64,7 @@ async function main() {
       podeCriarUsuario: true,
       podeGerenciarMalotes: true,
       podeGerenciarPedidos: true,
-      permitidoCriarUsuariosDosPerfis: [2, 3, 4],
+      permitidoCriarUsuariosDosPerfis: [1, 2, 3, 4],
     },
   });
 

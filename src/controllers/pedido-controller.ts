@@ -63,6 +63,9 @@ export async function index(req: Request, res: Response) {
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      usuario: true,
+    },
   });
 
   return res.json(pedidos);
